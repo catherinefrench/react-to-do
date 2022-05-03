@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 const FILTER_MAP = {
   All: () => true,
   Active: task => !task.completed,
+  InProgress: task=> task.inProgress,
   Completed: task => task.completed
 };
 
@@ -23,8 +24,10 @@ function App(props) {
         id={task.id}
         name={task.name}
         completed={task.completed}
+        inProgress={task.inProgress}
         key={task.id}
         toggleTaskCompleted={toggleTaskCompleted}
+        toggleTaskInProgress={toggleTaskInProgress}
         deleteTask={deleteTask}
         editTask={editTask}
     />
@@ -38,15 +41,25 @@ function App(props) {
     />
   ));
   function toggleTaskCompleted(id) {
+    // console.log("inside toggleTaskCompleted");
     const updatedTasks = tasks.map(task => {
       // if this task has the same ID as the edited task
       if (id === task.id) {
         // use object spread to make a new object
         // whose `completed` prop has been inverted
-        return {...task, completed: !task.completed}
+        return {...task, completed: !task.completed} 
       }
       return task;
     });
+    setTasks(updatedTasks);
+  }
+  function toggleTaskInProgress(id) { 
+    const updatedTasks = tasks.map(task => { 
+      if (id === task.id) { 
+        return {...task, inProgress: !task.inProgress} 
+      } 
+      return task;
+    })
     setTasks(updatedTasks);
   }
   function addTask(name) {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 export default function Todo(props) {
     const [isEditing, setEditing] = useState(false);
+    const [isBeginTask, setBeginTask] = useState(false);
     const [newName, setNewName] = useState('');
     function handleChange(e) {
         setNewName(e.target.value);
@@ -11,6 +12,7 @@ export default function Todo(props) {
         props.editTask(props.id, newName);
         setNewName("");
         setEditing(false);
+        setBeginTask(false);
     }
     const editingTemplate = (
         <form className="stack-small" onSubmit={handleSubmit}>
@@ -53,8 +55,10 @@ export default function Todo(props) {
             <div className="btn-group">
             <button type="button" className="btn" onClick={() => setEditing(true)}>
                 Edit <span className="visually-hidden">{props.name}</span>
+            </button> 
+            <button type="button" className="btn" onClick={() => props.toggleTaskInProgress(props.id)}>
+            Begin Task <span className="visually-hidden">{props.name}</span>
             </button>
-
               <button
                 type="button"
                 className="btn btn__danger"
