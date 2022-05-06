@@ -82,8 +82,19 @@ function App(props) {
     setTasks(editedTaskList);
   }
 
+//maps over the button state isPressed, if true returns that button name to find active tab
+  const activeButtonState = Object.keys(filterList).map(function(key) {
+    if (filterList[key].props.isPressed) {
+      return filterList[key].props.name;
+    }   
+  });
+  //converts the array returned from finding active button state to string without any ","
+  function activeButtonStateString(activeButtonState) {
+    return activeButtonState.join().replace(/[^a-zA-Z]/g,"");
+  }
+
   const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
-  const headingText = `${taskList.length} ${tasksNoun} remaining`;
+  const headingText = `${taskList.length} ${tasksNoun} ${activeButtonStateString(activeButtonState)}`;
   return (
     <div className="todoapp stack-large">
       <h1>TodoMatic</h1>
