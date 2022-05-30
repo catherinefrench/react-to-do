@@ -17,6 +17,51 @@ function App(props) {
   const [tasks, setTasks] = useState(props.tasks);
   const [filter, setFilter] = useState('All');
 
+  const toggleTaskCompleted = (id) => {
+    // console.log("inside toggleTaskCompleted");
+    const updatedTasks = tasks.map(task => {
+      // if this task has the same ID as the edited task
+      if (id === task.id) {
+        // use object spread to make a new object
+        // whose `completed` prop has been inverted
+        return {...task, completed: !task.completed} 
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  }
+
+  const toggleTaskInProgress = (id) => { 
+    const updatedTasks = tasks.map(task => {  
+      if (id === task.id) { 
+        return {...task, inProgress: !task.inProgress} 
+      } 
+      return task;
+    })
+    setTasks(updatedTasks);
+  }
+
+  const addTask = (name) => {
+    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+    setTasks([...tasks, newTask]);
+  }
+  const deleteTask = (id) => {
+    const remainingTasks = tasks.filter(task => id !== task.id);
+    setTasks(remainingTasks);
+  }
+
+  const editTask = (id, newName) => {
+    const editedTaskList = tasks.map(task => {
+    // if this task has the same ID as the edited task
+      if (id === task.id) {
+        //
+        return {...task, name: newName}
+      }
+      return task;
+    });
+    setTasks(editedTaskList);
+  }
+
   const taskList = tasks
   .filter(FILTER_MAP[filter])  
   .map(task => (
@@ -32,6 +77,7 @@ function App(props) {
         editTask={editTask}
     />
   ));
+
   const filterList = FILTER_NAMES.map(name => (
     <FilterButton 
       key={name} 
@@ -40,47 +86,8 @@ function App(props) {
       setFilter={setFilter}
     />
   ));
-  function toggleTaskCompleted(id) {
-    // console.log("inside toggleTaskCompleted");
-    const updatedTasks = tasks.map(task => {
-      // if this task has the same ID as the edited task
-      if (id === task.id) {
-        // use object spread to make a new object
-        // whose `completed` prop has been inverted
-        return {...task, completed: !task.completed} 
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
-  }
-  function toggleTaskInProgress(id) { 
-    const updatedTasks = tasks.map(task => { 
-      if (id === task.id) { 
-        return {...task, inProgress: !task.inProgress} 
-      } 
-      return task;
-    })
-    setTasks(updatedTasks);
-  }
-  function addTask(name) {
-    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
-    setTasks([...tasks, newTask]);
-  }
-  function deleteTask(id) {
-    const remainingTasks = tasks.filter(task => id !== task.id);
-    setTasks(remainingTasks);
-  }
-  function editTask(id, newName) {
-    const editedTaskList = tasks.map(task => {
-    // if this task has the same ID as the edited task
-      if (id === task.id) {
-        //
-        return {...task, name: newName}
-      }
-      return task;
-    });
-    setTasks(editedTaskList);
-  }
+
+
 
 //maps over the button state isPressed, if true returns that button name to find active tab
   const activeButtonState = Object.keys(filterList).map(function(key) {
@@ -89,7 +96,7 @@ function App(props) {
     }   
   });
   //converts the array returned from finding active button state to string without any ","
-  function activeButtonStateString(activeButtonState) {
+  const activeButtonStateString = (activeButtonState) => {
     return activeButtonState.join().replace(/[^a-zA-Z]/g,"");
   }
 
